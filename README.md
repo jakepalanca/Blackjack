@@ -1,7 +1,9 @@
 # Blackjack
 
 <p align="center">
-  <img src="Assets/icon" alt="Blackjack Logo" width="200"/>
+  <img src="https://github.com/jakepalanca/Blackjack/blob/main/Screenshots/icon.png" 
+       alt="Blackjack Logo" 
+       width="200"
 </p>
 
 ## Overview
@@ -12,7 +14,7 @@ This project is a fully functional Blackjack game built entirely in Swift and Sw
 
 |                 |                  |                  |                  |
 | :-------------: | :--------------: | :--------------: | :--------------: |
-| ![Gameplay Screenshot](Assets/screenshot_1.PNG) | ![Betting Screenshot](Assets/screenshot_2.PNG) | ![Insurance Screenshot](Assets/screenshot_3.PNG) | ![Rules Screenshot](Assets/screenshot_4.PNG)     |
+| ![Gameplay Screenshot](https://github.com/jakepalanca/Blackjack/blob/main/Screenshots/screenshot_1.PNG)) | ![Betting Screenshot](https://github.com/jakepalanca/Blackjack/blob/main/Screenshots/screenshot_2.PNG)) | ![Insurance Screenshot](https://github.com/jakepalanca/Blackjack/blob/main/Screenshots/screenshot_3.PNG)) | ![Rules Screenshot](https://github.com/jakepalanca/Blackjack/blob/main/Screenshots/screenshot_4.PNG))     |
 | *Gameplay example showing cards dealt and player options* | *Player adjusting bet using the custom slider* | *Player adjusting insurance bet using the custom slider* | *Comprehensive rules view* |
 
 ## Features
