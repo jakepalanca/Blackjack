@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "2FD67C7A-BF35-43DB-9165-6F75AE8241B7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Blackjack.xcodeproj",
+      "identifier" : "5C33FA7C2D22ECB9000EA119",
+      "name" : "Blackjack"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Blackjack.xcodeproj",
+        "identifier" : "5C513E022D24962D00ADA5D8",
+        "name" : "BlackjackTests"
+      }
+    }
+  ],
+  "version" : 1
+}
