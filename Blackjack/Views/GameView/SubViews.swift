@@ -12,17 +12,17 @@ import SwiftUI
 /// A customizable button view designed for use in sheets.
 struct SheetButton: View {
     let title: String
-    let color: Color
+    let color: Color? // Changed to optional
     let disabled: Bool
     let action: () -> Void
 
     /// Initializes a new `SheetButton`.
     /// - Parameters:
     ///   - title: The title text of the button.
-    ///   - color: The background color of the button. Defaults to black.
+    ///   - color: The background color of the button. Defaults to nil, which uses accentColor.
     ///   - disabled: A Boolean indicating if the button is disabled. Defaults to false.
     ///   - action: The action to perform when the button is tapped.
-    init(title: String, color: Color = .black, disabled: Bool = false, action: @escaping () -> Void) {
+    init(title: String, color: Color? = nil, disabled: Bool = false, action: @escaping () -> Void) { // Default color is nil
         self.title = title
         self.color = color
         self.disabled = disabled
@@ -33,20 +33,35 @@ struct SheetButton: View {
         Button(action: action) {
             Text(title)
                 .font(.headline)
-                .foregroundStyle(.white)
+                // Adaptive foregroundStyle
+                .foregroundStyle(disabled ? Color.gray : (color == nil ? Color.accentColor : (isLightColor(color ?? .black) ? .black : .white)))
                 .frame(maxWidth: .infinity)
-                .frame(height: 50)
+                // Removed fixed height, added padding
+                .padding(.vertical, 12)
+                .padding(.horizontal, 20)
                 .background(
-                    color
-                        .opacity(disabled ? 0.5 : 1) // Reduce opacity when disabled
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.white.opacity(0.3), lineWidth: 1)
-                        )
+                    // Use material if color is nil, otherwise use the color
+                    Group {
+                        if let bgColor = color {
+                            bgColor.opacity(disabled ? 0.5 : 1)
+                        } else {
+                            .regularMaterial
+                        }
+                    }
                 )
-                .cornerRadius(16)
+                // Updated corner radius
+                .cornerRadius(12)
+                // Removed overlay
         }
         .disabled(disabled)
+    }
+
+    // Helper function to determine if a color is light
+    private func isLightColor(_ color: Color) -> Bool {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(color).getRed(&r, green: &g, blue: &b, alpha: &a)
+        let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+        return luminance > 0.5 // Threshold can be adjusted
     }
 }
 
@@ -55,13 +70,13 @@ struct SheetButton: View {
 /// A view representing a stack of chips with a specified amount.
 func chipStack(amount: Int) -> some View {
     HStack(spacing: 4) {
-        Image(systemName: "circle.fill")
+        Image(systemName: "dollarsign.circle.fill") // Changed icon
             .font(.system(size: 20))
-            .foregroundStyle(.orange)
+            .foregroundStyle(Color.accentColor) // Changed foreground style
         Text("$\(amount)")
             .font(.system(size: 18))
             .fontWeight(.bold)
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.primary) // Changed foreground style
     }
 }
 
@@ -111,11 +126,11 @@ struct quickBetButton: View {
             Text(title)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.accentColor) // Changed foregroundStyle
                 .frame(maxWidth: .infinity)
-                .frame(height: 36)
-                .background(.black.opacity(0.6))
-                .clipShape(Capsule())
+                .padding(.vertical, 8) // Added padding, removed fixed height
+                .background(.thinMaterial, in: Capsule()) // Changed background
+                // .clipShape(Capsule()) // Already applied by background material shape
         }
     }
 }
