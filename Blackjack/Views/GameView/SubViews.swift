@@ -12,7 +12,7 @@ import SwiftUI
 /// A customizable button view designed for use in sheets.
 struct SheetButton: View {
     let title: String
-    let color: Color? // Changed to optional
+    let color: Color?
     let disabled: Bool
     let action: () -> Void
 
@@ -36,22 +36,17 @@ struct SheetButton: View {
                 // Adaptive foregroundStyle
                 .foregroundStyle(disabled ? Color.gray : (color == nil ? Color.accentColor : (isLightColor(color ?? .black) ? .black : .white)))
                 .frame(maxWidth: .infinity)
-                // Removed fixed height, added padding
                 .padding(.vertical, 12)
                 .padding(.horizontal, 20)
-                .background(
+                .background {
                     // Use material if color is nil, otherwise use the color
-                    Group {
-                        if let bgColor = color {
-                            bgColor.opacity(disabled ? 0.5 : 1)
-                        } else {
-                            .regularMaterial
-                        }
+                    if let bgColor = color {
+                        bgColor.opacity(disabled ? 0.5 : 1)
+                    } else {
+                        Rectangle().fill(.regularMaterial)
                     }
-                )
-                // Updated corner radius
+                }
                 .cornerRadius(12)
-                // Removed overlay
         }
         .disabled(disabled)
     }
@@ -70,13 +65,13 @@ struct SheetButton: View {
 /// A view representing a stack of chips with a specified amount.
 func chipStack(amount: Int) -> some View {
     HStack(spacing: 4) {
-        Image(systemName: "dollarsign.circle.fill") // Changed icon
+        Image(systemName: "dollarsign.circle.fill")
             .font(.system(size: 20))
-            .foregroundStyle(Color.accentColor) // Changed foreground style
+            .foregroundStyle(Color.accentColor)
         Text("$\(amount)")
             .font(.system(size: 18))
             .fontWeight(.bold)
-            .foregroundStyle(Color.primary) // Changed foreground style
+            .foregroundStyle(Color.primary)
     }
 }
 
@@ -126,11 +121,10 @@ struct quickBetButton: View {
             Text(title)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundStyle(Color.accentColor) // Changed foregroundStyle
+                .foregroundStyle(Color.accentColor)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 8) // Added padding, removed fixed height
-                .background(.thinMaterial, in: Capsule()) // Changed background
-                // .clipShape(Capsule()) // Already applied by background material shape
+                .padding(.vertical, 8)
+                .background(.thinMaterial, in: Capsule())
         }
     }
 }

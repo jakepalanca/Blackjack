@@ -15,6 +15,11 @@ struct SettingsView: View {
     @Environment(\.requestReview) var requestReview
     @Environment(\.openURL) var openURL
     @State private var showMailOptions = false
+    #if DEBUG
+    @State private var showLostSheet = false
+    @State private var showPotSheet = false
+    @State private var showInsuranceSheet = false
+    #endif
 
     private let appStoreID = "YOUR_APP_STORE_ID" // TODO: Replace with your app's ID
     private let supportEmail = "support@yourappdomain.com" // TODO: Replace with your support email
@@ -40,6 +45,15 @@ struct SettingsView: View {
                             await viewModel.resetGame()
                             dismiss()
                         }
+                    }
+                    Button("Show Lost Sheet") {
+                        showLostSheet = true
+                    }
+                    Button("Show Pot Sheet") {
+                        showPotSheet = true
+                    }
+                    Button("Show Insurance Sheet") {
+                        showInsuranceSheet = true
                     }
                 }
                 #endif
@@ -104,6 +118,19 @@ struct SettingsView: View {
                     }
                 }
             }
+            #if DEBUG
+            // Test-only presentations for sheets
+            .sheet(isPresented: $showLostSheet) {
+                LostSheet(highestBalance: 999, onClose: { showLostSheet = false })
+                    .environmentObject(viewModel)
+            }
+            .sheet(isPresented: $showPotSheet) {
+                PotSheet(playerBalance: 1000, currentPot: 100, onClose: { showPotSheet = false }, setPotAction: { _ in })
+            }
+            .sheet(isPresented: $showInsuranceSheet) {
+                InsuranceSheet(playerBalance: 1000, currentPot: 200, onClose: { showInsuranceSheet = false }, takeInsuranceAction: { _ in })
+            }
+            #endif
         }
     }
 
