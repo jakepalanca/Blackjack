@@ -70,20 +70,54 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Bottom UI elements including notifications and controls
+            // Wrapper VStack to push BottomControlsContainerView to the bottom
             VStack(spacing: 0) {
-                Spacer()
+                Spacer() // Pushes content below it to the bottom
 
-                NotificationStackView(queue: notificationQueue)
-                    .padding(.bottom, 8)
-                    .frame(height: 60)
-                    .zIndex(1)
+                BottomControlsContainerView(
+                    mainBackgroundColor: Color.black.opacity(0.7), // Using previously set colors
+                    notificationBackgroundColor: Color.black.opacity(0.5), // Using previously set colors
+                    cornerRadius: 20,
+                    notificationContent: {
+                        NotificationStackView(queue: notificationQueue)
+                            .frame(height: 60)
+                    },
+                    mainContent: {
+                        VStack(spacing: 8) {
+                            HStack(spacing: 16) {
+                                balanceView(title: "Balance", amount: displayedBalance)
+                                    .frame(maxWidth: .infinity, alignment: .center) // Added frame
 
-                bottomControlSection
-                    .padding(.bottom, 4)
-                    .zIndex(2)
+                                balanceView(title: "Current Bet", amount: viewModel.currentPot)
+                                    .frame(maxWidth: .infinity, alignment: .center) // Added frame
+                            }
+                            .padding(.horizontal)
+                            .padding(.vertical, 8) // Added vertical padding
+
+                            Divider() // Added Divider
+                                .padding(.horizontal)
+
+                            ZStack {
+                                if viewModel.currentStage == .initializing || viewModel.currentStage == .newRound {
+                                    newRoundControls
+                                        .transition(.opacity)
+                                } else if showActionButtons {
+                                    playerTurnControls
+                                        .transition(.opacity)
+                                }
+                            }
+                            .animation(.gameEaseInOut, value: viewModel.currentStage)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 300) // Adjusted height for VStack of buttons
+                            .padding(.horizontal)
+                        }
+                        .padding(.bottom, 4)
+                    }
+                )
+                .frame(maxWidth: .infinity) // Ensure BottomControlsContainerView spans width
+                .edgesIgnoringSafeArea(.bottom) // Crucial for extending to physical bottom
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity) // Ensure the wrapper VStack also spans width
         }
         // Manage presentation of different sheets
         .sheet(item: $activeSheet, onDismiss: {
@@ -228,91 +262,67 @@ struct GameView: View {
             Text(title)
                 .fontWeight(.bold)
                 .font(.headline)
-                .foregroundColor(.white)
+                .foregroundColor(.primary) // Changed to .primary
 
-            AnimatedNumberView(number: amount)
+            AnimatedNumberView(number: amount) // AnimatedNumberView will also be updated
         }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(.thickMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        // Removed .padding(), .frame(), .background(), and .clipShape()
     }
 
     // MARK: - Bottom Controls
     // Section for displaying game controls at the bottom of the screen
-    private var bottomControlSection: some View {
-        return VStack {
-            HStack(spacing: 16) {
-                balanceView(title: "Balance", amount: displayedBalance)
-                balanceView(title: "Current Bet", amount: viewModel.currentPot)
-            }
-            .padding(.horizontal)
-            .transition(.move(edge: .bottom))
-
-            ZStack {
-                if viewModel.currentStage == .initializing || viewModel.currentStage == .newRound {
-                    newRoundControls
-                        .transition(.move(edge: .leading).combined(with: .opacity))
-                } else if showActionButtons {
-                    playerTurnControls
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                }
-            }
-            .animation(.gameEaseInOut, value: viewModel.currentStage)
-            .frame(maxWidth: .infinity)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.vertical, 4)
-            .padding(.horizontal)
-        }
-    }
+    // private var bottomControlSection: some View { ... } // This is now inlined into the body and can be removed.
 
     // Controls for starting a new round
     private var newRoundControls: some View {
-        HStack(spacing: 16) {
+        VStack(spacing: 12) { // Changed to VStack
             ActionButton(
-                systemImage: "dollarsign.circle",
-                label: "Change Bet",
+                systemImage: "dollarsign.circle.fill", // Example icon
+                // label: nil, // No label
                 isDisabled: viewModel.isProcessingAction || viewModel.isInHand,
-                circular: false
+                // circular: false, // Not needed if default is false
+                // cornerRadius: 8, // Not needed if default is 8
+                backgroundColor: Color(UIColor.systemGray3) // Neutral background
             ) {
                 viewModel.isProcessingAction = true
                 activeSheet = .pot
             }
 
             ActionButton(
-                systemImage: "play.fill",
-                label: "Start Round",
+                systemImage: "play.fill", // Example icon
+                // label: nil, // No label
                 isDisabled: viewModel.currentPot < 10 || viewModel.isProcessingAction || viewModel.isInHand,
-                circular: false
+                backgroundColor: Color.accentColor // Accent color
             ) {
                 Task { await viewModel.startNewRound() }
             }
         }
+        // .padding(.horizontal) // This padding might now be on the ZStack containing these controls
     }
 
     // Controls for player actions during their turn
     private var playerTurnControls: some View {
-        HStack(spacing: 12) {
+        VStack(spacing: 12) { // Changed to VStack
             ActionButton(
-                systemImage: "hand.tap",
+                systemImage: "hand.tap.fill",
                 isDisabled: !viewModel.allowedActions.canHit || viewModel.isProcessingAction,
-                circular: true
+                backgroundColor: Color(UIColor.systemGray3)
             ) {
                 Task { await viewModel.hit() }
             }
 
             ActionButton(
-                systemImage: "hand.raised",
+                systemImage: "hand.raised.fill",
                 isDisabled: !viewModel.allowedActions.canStand || viewModel.isProcessingAction,
-                circular: true
+                backgroundColor: Color(UIColor.systemGray3)
             ) {
                 Task { await viewModel.stand() }
             }
 
             ActionButton(
-                systemImage: "arrow.up.forward.circle.fill",
+                systemImage: "arrow.up.forward.circle.fill", // Or other icon for double
                 isDisabled: !viewModel.allowedActions.canDoubleDown || viewModel.isProcessingAction,
-                circular: true
+                backgroundColor: Color(UIColor.systemGray3)
             ) {
                 Task { await viewModel.doubleDown() }
             }
@@ -320,19 +330,20 @@ struct GameView: View {
             ActionButton(
                 systemImage: "arrow.triangle.branch",
                 isDisabled: !viewModel.allowedActions.canSplit || viewModel.isProcessingAction,
-                circular: true
+                backgroundColor: Color(UIColor.systemGray3)
             ) {
                 Task { await viewModel.split() }
             }
 
             ActionButton(
-                systemImage: "flag",
+                systemImage: "flag.fill",
                 isDisabled: !viewModel.allowedActions.canSurrender || viewModel.isProcessingAction,
-                circular: true
+                backgroundColor: Color(UIColor.systemGray3)
             ) {
                 Task { await viewModel.surrender() }
             }
         }
+        // .padding(.horizontal) // This padding might now be on the ZStack
     }
 
     // MARK: - Player Hands Section
@@ -440,7 +451,7 @@ struct GameView: View {
             Text("$\(number)")
                 .font(.headline)
                 .fontWeight(.regular)
-                .foregroundColor(.white)
+                .foregroundColor(.primary) // Changed to .primary
                 .monospacedDigit()
         }
     }
