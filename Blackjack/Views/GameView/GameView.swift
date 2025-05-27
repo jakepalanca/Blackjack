@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 struct GameView: View {
     @EnvironmentObject var viewModel: GameViewModel
+    @StateObject private var appearanceSettings = AppearanceSettings()
     @StateObject private var notificationQueue = NotificationQueue()
 
     @Namespace private var cardNamespace
@@ -44,7 +45,12 @@ struct GameView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            GameBackground() // Set the game background
+            DynamicBackgroundView().environmentObject(appearanceSettings)
+
+            // GameBackground() // Set the game background - Replaced by DynamicBackgroundView
+            // Ensure GameBackground() is removed or commented out if DynamicBackgroundView replaces it.
+            // If GameBackground() is meant to be an overlay or different type of background, adjust accordingly.
+            // For this task, DynamicBackgroundView is the primary background.
 
             VStack(spacing: 0) {
                 // Show welcome banner or dealer's hand based on game state

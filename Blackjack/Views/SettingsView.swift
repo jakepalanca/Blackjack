@@ -14,6 +14,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.requestReview) var requestReview
     @Environment(\.openURL) var openURL
+    @StateObject private var appearanceSettings = AppearanceSettings()
     @State private var showMailOptions = false
     #if DEBUG
     @State private var showLostSheet = false
@@ -57,6 +58,21 @@ struct SettingsView: View {
                     }
                 }
                 #endif
+
+                // Appearance settings section
+                Section(header: Text("Appearance")) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 15) {
+                            ForEach(AppearanceSettings.availableBackgrounds) { bg in
+                                BackgroundPreviewView(background: bg, isSelected: appearanceSettings.selectedBackground == bg)
+                                    .onTapGesture {
+                                        appearanceSettings.selectedBackground = bg
+                                    }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
 
                 // General settings section
                 Section(header: Text("General")) {
