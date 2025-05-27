@@ -70,7 +70,7 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity)
 
-            // Wrapper VStack to push BottomControlsContainerView to the bottom
+          // Wrapper VStack to push BottomControlsContainerView to the bottom
             VStack(spacing: 0) {
                 Spacer() // Pushes content below it to the bottom
 
@@ -118,6 +118,7 @@ struct GameView: View {
                 .edgesIgnoringSafeArea(.bottom) // Crucial for extending to physical bottom
             }
             .frame(maxWidth: .infinity) // Ensure the wrapper VStack also spans width
+
         }
         // Manage presentation of different sheets
         .sheet(item: $activeSheet, onDismiss: {
@@ -266,7 +267,6 @@ struct GameView: View {
 
             AnimatedNumberView(number: amount) // AnimatedNumberView will also be updated
         }
-        // Removed .padding(), .frame(), .background(), and .clipShape()
     }
 
     // MARK: - Bottom Controls

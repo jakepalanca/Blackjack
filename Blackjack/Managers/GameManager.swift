@@ -137,17 +137,21 @@ actor GameManager {
 
         // Handle insurance bet externally; only main bet is handled here
 
-        if isHandBlackjack {
+        // Check for NATURAL Blackjack (2-card 21 on a non-split hand)
+        if isHandBlackjack && !playerHand.hasSplit {
             if dealerHand.isBlackjack {
                 // Push: return the original bet
                 playerBalance += playerHand.bet
             } else {
-                // Player has Blackjack and dealer does not: pay out 3:2
-                let payoff = Int(ceil(Double(playerHand.bet) * 1.5))
-                playerBalance += payoff
+                // Player has a natural Blackjack and dealer does not: pay out 3:2
+                // Player gets their original bet back (1x) + winnings (1.5x) = total 2.5x the bet.
+                let totalReturn = Int(ceil(Double(playerHand.bet) * 2.5))
+                playerBalance += totalReturn
             }
             return
         }
+        // If isHandBlackjack is true but playerHand.hasSplit is also true,
+        // it's a 21 on a split hand, which pays 1:1, handled by the logic below.
 
         if playerHand.isBusted {
             // Player is busted: lose the bet (do nothing, as the bet was already subtracted)

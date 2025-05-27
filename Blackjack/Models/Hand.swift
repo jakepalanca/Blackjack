@@ -23,6 +23,7 @@ struct Hand: Sendable, Identifiable, Equatable, Hashable {
     var isCompleted: Bool = false
     var hasDoubledDown: Bool = false
     var hasSplitAces: Bool = false
+    var hasSplit: Bool = false // Added for tracking split hands for payout
     
     var spread: CGFloat = 0
     
@@ -57,6 +58,7 @@ struct Hand: Sendable, Identifiable, Equatable, Hashable {
         hasher.combine(isCompleted)
         hasher.combine(hasDoubledDown)
         hasher.combine(hasSplitAces)
+        hasher.combine(hasSplit) // Added for tracking split hands for payout
         hasher.combine(spread)
         hasher.combine(result)
     }
@@ -69,6 +71,7 @@ struct Hand: Sendable, Identifiable, Equatable, Hashable {
             lhs.isCompleted == rhs.isCompleted &&
             lhs.hasDoubledDown == rhs.hasDoubledDown &&
             lhs.hasSplitAces == rhs.hasSplitAces &&
+            lhs.hasSplit == rhs.hasSplit && // Added for tracking split hands for payout
             lhs.spread == rhs.spread &&
             lhs.result == rhs.result
     }

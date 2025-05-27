@@ -22,8 +22,10 @@ struct NotificationView: View {
                 .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)) // Changed padding
                 .background(
                     // Set background color based on whether the notification is active
-                    notification.isActive ? Color.white : Color.accentColor, // Kept existing color logic
-                    in: RoundedRectangle(cornerRadius: 16) // Changed cornerRadius to 16
+                  notification.isActive ? Color.white : Color.accentColor, // Kept existing color logic
+               
+                  in: RoundedRectangle(cornerRadius: 16) // Changed cornerRadius to 16
+
                 )
                 // Define the transition animation for when the notification appears and disappears
                 .transition(

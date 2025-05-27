@@ -86,6 +86,8 @@ final class SplitViewModel: ObservableObject {
         // Create two new hands from the original hand's cards.
         var hand1 = Hand(cards: [c1], bet: hand.bet)
         var hand2 = Hand(cards: [c2], bet: hand.bet)
+        hand1.hasSplit = true // Mark as a split hand
+        hand2.hasSplit = true // Mark as a split hand
 
         // If the split cards are Aces, mark each new hand accordingly.
         if c1.rank == .ace && c2.rank == .ace {
