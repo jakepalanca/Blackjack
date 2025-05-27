@@ -402,7 +402,8 @@ class GameViewModel: ObservableObject {
         if let upcard = dealerAllCards.first, upcard.rank == .ace, insuranceBet > 0 {
             let dh = await handManager.dealerHand
             if dh.isBlackjack {
-                await gameManager.updateBalance(by: insuranceBet * 2)
+                // Insurance pays 2:1: player gets stake (1x) + winnings (2x) = 3x insuranceBet added back to balance.
+                await gameManager.updateBalance(by: insuranceBet * 3)
                 playerBalanceCache = await gameManager.playerBalance
                 addNotification("Insurance pays 2:1!")
             }
@@ -513,6 +514,14 @@ class GameViewModel: ObservableObject {
             isProcessingAction = false
             return
         }
+
+        // ---- START NEW CODE ----
+        if hand.hasSplitAces && hand.cards.count == 2 {
+            addNotification("Cannot hit split Aces after receiving the second card.")
+            isProcessingAction = false
+            return
+        }
+        // ---- END NEW CODE ----
 
         let newCard = await dealCards(count: 1).first
         guard let drawnCard = newCard else {
