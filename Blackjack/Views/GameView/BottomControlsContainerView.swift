@@ -20,13 +20,13 @@ struct TopRoundedRectangle: Shape {
 struct BottomControlsContainerView<NotificationContent: View, MainContent: View>: View {
     let notificationContent: NotificationContent
     let mainContent: MainContent
-    var mainBackgroundColor: Color = Color.gray.opacity(0.2)
-    var notificationBackgroundColor: Color = Color.blue.opacity(0.3) // Contrasting color
+    var mainBackgroundColor: Color = Color(UIColor.systemGray6) // Updated default
+    var notificationBackgroundColor: Color = Color(UIColor.systemGray4) // Updated default
     var cornerRadius: CGFloat = 20
 
     init(
-        mainBackgroundColor: Color = Color.gray.opacity(0.2),
-        notificationBackgroundColor: Color = Color.blue.opacity(0.3),
+        mainBackgroundColor: Color = Color(UIColor.systemGray6), // Updated default in initializer
+        notificationBackgroundColor: Color = Color(UIColor.systemGray4), // Updated default in initializer
         cornerRadius: CGFloat = 20,
         @ViewBuilder notificationContent: () -> NotificationContent,
         @ViewBuilder mainContent: () -> MainContent

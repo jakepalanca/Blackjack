@@ -16,13 +16,16 @@ struct NotificationView: View {
         HStack {
             // Display the notification text with specified font and color
             Text(notification.text)
-                .font(.subheadline)
-                .foregroundColor(notification.isActive ? .black : .primary)
-                .padding()
+                .font(.caption) // Changed to .caption
+                .fontWeight(.bold) // Added .fontWeight(.bold)
+                .foregroundColor(notification.isActive ? .black : .primary) // Kept existing color logic
+                .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)) // Changed padding
                 .background(
                     // Set background color based on whether the notification is active
-                    notification.isActive ? Color.white : Color.accentColor,
-                    in: RoundedRectangle(cornerRadius: 8)
+                  notification.isActive ? Color.white : Color.accentColor, // Kept existing color logic
+               
+                  in: RoundedRectangle(cornerRadius: 16) // Changed cornerRadius to 16
+
                 )
                 // Define the transition animation for when the notification appears and disappears
                 .transition(
