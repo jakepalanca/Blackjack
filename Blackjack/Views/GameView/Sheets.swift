@@ -26,8 +26,8 @@ struct LostSheet: View {
                 // Title indicating game over
                 Text("Game Over!")
                     .font(.system(size: 36, weight: .heavy))
-                    .foregroundStyle(.white)
-                    .shadow(color: .blue.opacity(0.3), radius: 4)
+                    .foregroundStyle(Color.primary) // Changed to .primary
+                    // Removed shadow: .shadow(color: .blue.opacity(0.3), radius: 4)
                     .scaleEffect(isAppearing ? 1 : 0.5)
                     .opacity(isAppearing ? 1 : 0)
 
@@ -36,23 +36,17 @@ struct LostSheet: View {
                     VStack(spacing: 8) {
                         Text("Highest Balance")
                             .font(.headline)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(Color.secondary) // Changed to .secondary
 
                         Text("$\(highestBalance)")
                             .font(.system(size: 48, weight: .bold))
-                            .foregroundStyle(.blue)
-                            .shadow(color: .blue.opacity(0.3), radius: 8)
+                            .foregroundStyle(Color.accentColor) // Changed to .accentColor
+                        // Removed shadow: .shadow(color: .blue.opacity(0.3), radius: 8)
                     }
                     .padding(.vertical, 24)
                     .padding(.horizontal, 32)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(uiColor: .systemGray6).opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(.white.opacity(0.1), lineWidth: 1)
-                            )
-                    )
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20)) // Changed background
+                    // Removed overlay
                 }
                 .scaleEffect(isAppearing ? 1 : 0.8)
                 .opacity(isAppearing ? 1 : 0)
@@ -61,7 +55,7 @@ struct LostSheet: View {
                 Text("Your balance is $0. You've been refilled. Press continue to keep playing.")
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color.secondary) // Changed to .secondary
                     .padding(.horizontal, 24)
 
                 // Button to continue the game
@@ -77,7 +71,7 @@ struct LostSheet: View {
             }
             .padding(.vertical, 32)
         }
-        .presentationDetents([.height(500)])
+        .presentationDetents([.fraction(0.65)]) // Changed from .height(500)
         .onAppear {
             // Animate the appearance of the sheet
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -109,7 +103,7 @@ struct PotSheet: View {
                 // Title for the bet placement screen
                 Text("Place Your Bet")
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.primary) // Changed to .primary
                     .opacity(isAppearing ? 1 : 0)
                     .offset(y: isAppearing ? 0 : 20)
 
@@ -118,16 +112,10 @@ struct PotSheet: View {
                     VStack(spacing: 24) {
                         // Chip stack view displaying the current bet amount
                         chipStack(amount: Int(potSliderValue))
-                            .font(.system(size: 36, weight: .bold))
+                            .font(.system(size: 36, weight: .bold)) // Note: .font modifier on chipStack directly might not be standard. If chipStack has its own internal font settings, this might be redundant or conflicting.
                             .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color(uiColor: .systemGray6).opacity(0.1))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.white.opacity(0.1), lineWidth: 1)
-                                    )
-                            )
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20)) // Changed background
+                            // Removed overlay
                             .scaleEffect(isAppearing ? 1 : 0.8)
                             .opacity(isAppearing ? 1 : 0)
 
@@ -151,10 +139,7 @@ struct PotSheet: View {
 
                         // Confirm and cancel buttons
                         HStack {
-                            SheetButton(
-                                title: "Cancel",
-                                color: Color(uiColor: .systemGray4).opacity(0.3)
-                            ) {
+                            SheetButton(title: "Cancel") { // Changed: Removed explicit color
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                     onClose()
                                 }
@@ -179,7 +164,7 @@ struct PotSheet: View {
                     VStack(spacing: 20) {
                         Text("Insufficient Funds")
                             .font(.title2.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.primary) // Changed to .primary
                             .multilineTextAlignment(.center)
 
                         SheetButton(title: "OK") {
@@ -194,7 +179,7 @@ struct PotSheet: View {
             .padding(.vertical, 32)
             .padding(.horizontal)
         }
-        .presentationDetents([.height(500)])
+        .presentationDetents([.fraction(0.65)]) // Changed from .height(500)
         .onAppear {
             // Initialize slider value based on current pot and player balance
             let pot = Double(currentPot)
@@ -244,14 +229,14 @@ struct InsuranceSheet: View {
                 VStack(spacing: 16) {
                     Image(systemName: "shield.lefthalf.filled")
                         .font(.system(size: 48))
-                        .foregroundStyle(.blue)
-                        .shadow(color: .blue.opacity(0.3), radius: 8)
+                        .foregroundStyle(Color.accentColor) // Changed to .accentColor
+                        // Removed shadow: .shadow(color: .blue.opacity(0.3), radius: 8)
                         .scaleEffect(isAppearing ? 1 : 0.5)
                         .opacity(isAppearing ? 1 : 0)
 
                     Text("Insurance")
                         .font(.system(size: 32, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.primary) // Changed to .primary
                         .opacity(isAppearing ? 1 : 0)
                         .offset(y: isAppearing ? 0 : 20)
                 }
@@ -261,16 +246,10 @@ struct InsuranceSheet: View {
                     VStack(spacing: 24) {
                         // Chip stack view displaying the current insurance bet amount
                         chipStack(amount: Int(insuranceSliderValue))
-                            .font(.system(size: 36, weight: .bold))
+                            .font(.system(size: 36, weight: .bold)) // Note: .font modifier on chipStack directly might not be standard.
                             .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color(uiColor: .systemGray6).opacity(0.1))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.white.opacity(0.1), lineWidth: 1)
-                                    )
-                            )
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20)) // Changed background
+                            // Removed overlay
                             .scaleEffect(isAppearing ? 1 : 0.8)
                             .opacity(isAppearing ? 1 : 0)
 
@@ -294,10 +273,7 @@ struct InsuranceSheet: View {
 
                         // Confirm and skip buttons
                         HStack(spacing: 16) {
-                            SheetButton(
-                                title: "Skip",
-                                color: Color(uiColor: .systemGray4).opacity(0.3)
-                            ) {
+                            SheetButton(title: "Skip") { // Changed: Removed explicit color
                                 withAnimation {
                                     takeInsuranceAction(0)
                                     onClose()
@@ -320,7 +296,7 @@ struct InsuranceSheet: View {
                     VStack(spacing: 20) {
                         Text("Insufficient Balance for Insurance")
                             .font(.title3.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.primary) // Changed to .primary
                             .multilineTextAlignment(.center)
 
                         SheetButton(title: "OK") {
@@ -336,7 +312,7 @@ struct InsuranceSheet: View {
             .padding(.vertical, 32)
             .padding(.horizontal)
         }
-        .presentationDetents([.height(500)])
+        .presentationDetents([.fraction(0.65)]) // Changed from .height(500)
         .onAppear {
             // Initialize insurance slider value
             insuranceSliderValue = 0
