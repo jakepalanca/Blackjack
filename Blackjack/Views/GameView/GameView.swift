@@ -71,19 +71,45 @@ struct GameView: View {
             .frame(maxWidth: .infinity)
 
             // Bottom UI elements including notifications and controls
-            VStack(spacing: 0) {
-                Spacer()
+            BottomControlsContainerView(
+                mainBackgroundColor: Color.black.opacity(0.7),
+                notificationBackgroundColor: Color.black.opacity(0.5), // Using a darker shade for notification strip
+                cornerRadius: 20,
+                notificationContent: {
+                    NotificationStackView(queue: notificationQueue)
+                        .frame(height: 60) // Keep height for notification area
+                        // Padding for notificationContent is handled by BottomControlsContainerView itself
+                },
+                mainContent: {
+                    VStack(spacing: 8) { // This VStack now only contains the main controls
+                        // The HStack for balance views
+                        HStack(spacing: 16) {
+                            balanceView(title: "Balance", amount: displayedBalance)
+                            balanceView(title: "Current Bet", amount: viewModel.currentPot)
+                        }
+                        .padding(.horizontal)
 
-                NotificationStackView(queue: notificationQueue)
-                    .padding(.bottom, 8)
-                    .frame(height: 60)
-                    .zIndex(1)
-
-                bottomControlSection
-                    .padding(.bottom, 4)
-                    .zIndex(2)
-            }
+                        // The ZStack for action buttons
+                        ZStack {
+                            if viewModel.currentStage == .initializing || viewModel.currentStage == .newRound {
+                                newRoundControls
+                                    .transition(.opacity)
+                            } else if showActionButtons {
+                                playerTurnControls
+                                    .transition(.opacity)
+                            }
+                        }
+                        .animation(.gameEaseInOut, value: viewModel.currentStage)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 70) // Keep fixed height for action button area
+                        // horizontal padding is applied to the ZStack directly
+                        .padding(.horizontal)
+                    }
+                    .padding(.bottom, 4) // Keep overall bottom padding for the main content area
+                }
+            )
             .frame(maxWidth: .infinity)
+            .edgesIgnoringSafeArea(.bottom) // Keep this
         }
         // Manage presentation of different sheets
         .sheet(item: $activeSheet, onDismiss: {
@@ -235,36 +261,12 @@ struct GameView: View {
         .padding()
         .frame(maxWidth: .infinity)
         .background(.thickMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     // MARK: - Bottom Controls
     // Section for displaying game controls at the bottom of the screen
-    private var bottomControlSection: some View {
-        return VStack {
-            HStack(spacing: 16) {
-                balanceView(title: "Balance", amount: displayedBalance)
-                balanceView(title: "Current Bet", amount: viewModel.currentPot)
-            }
-            .padding(.horizontal)
-            .transition(.move(edge: .bottom))
-
-            ZStack {
-                if viewModel.currentStage == .initializing || viewModel.currentStage == .newRound {
-                    newRoundControls
-                        .transition(.move(edge: .leading).combined(with: .opacity))
-                } else if showActionButtons {
-                    playerTurnControls
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                }
-            }
-            .animation(.gameEaseInOut, value: viewModel.currentStage)
-            .frame(maxWidth: .infinity)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.vertical, 4)
-            .padding(.horizontal)
-        }
-    }
+    // private var bottomControlSection: some View { ... } // This is now inlined into the body and can be removed.
 
     // Controls for starting a new round
     private var newRoundControls: some View {
