@@ -101,6 +101,7 @@ struct RulesContentView: View {
 /// The main view displaying the rules of Blackjack.
 @MainActor
 struct RulesView: View {
+    @Environment(\.dismiss) private var dismiss // Added dismiss environment variable
     @State private var expandedSections: Set<UUID> = []
     @Environment(\.colorScheme) private var colorScheme
 
@@ -223,7 +224,12 @@ struct RulesView: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(Color(.systemGroupedBackground))
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .navigationBarLeading) { // New Done button
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) { // Existing toggle button
                     Button(action: toggleAllSections) {
                         Image(systemName: expandedSections.isEmpty ? "chevron.down.circle" : "chevron.up.circle")
                             .symbolRenderingMode(.multicolor)

@@ -21,7 +21,7 @@ struct ActionButton: View {
         label: String? = nil,
         isDisabled: Bool = false,
         circular: Bool = false,
-        cornerRadius: CGFloat = 64, // Default corner radius for non-circular buttons
+        cornerRadius: CGFloat = 10, // Default corner radius for non-circular buttons
         action: @escaping () -> Void
     ) {
         self.systemImage = systemImage

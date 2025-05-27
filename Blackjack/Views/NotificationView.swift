@@ -22,7 +22,7 @@ struct NotificationView: View {
                 .background(
                     // Set background color based on whether the notification is active
                     notification.isActive ? Color.white : Color.accentColor,
-                    in: RoundedRectangle(cornerRadius: 12)
+                    in: RoundedRectangle(cornerRadius: 8)
                 )
                 // Define the transition animation for when the notification appears and disappears
                 .transition(
